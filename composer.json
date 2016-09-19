@@ -1,0 +1,16 @@
+{
+  "name": "nunopress/wordpress-plugin",
+  "description": "Base abstraction for our new Plugins",
+  "type": "library",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "NunoPress LLC",
+      "email": "hello@nunopress.com"
+    }
+  ],
+  "require": {
+    "illuminate/config": "^5.3",
+    "php": "^5.6"
+  }
+}
