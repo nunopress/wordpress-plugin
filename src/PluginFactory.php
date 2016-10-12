@@ -9,7 +9,7 @@ use Illuminate\Config\Repository;
  *
  * @package NunoPress\WP\Plugin
  */
-class PluginFactory implements PluginInterface
+abstract class PluginFactory implements PluginInterface
 {
     /**
      * @var Repository|null
@@ -56,11 +56,9 @@ class PluginFactory implements PluginInterface
 
         extract($data);
 
-        require_once $template;
+        include $template;
 
-        $content = ob_get_contents();
-
-        ob_end_clean();
+        $content = ob_get_clean();
 
         if (true === $return) {
             return $content;
@@ -74,7 +72,26 @@ class PluginFactory implements PluginInterface
      */
     public function registerHooks()
     {
+        throw new \Exception(sprintf(
+                'You need to implement %s in %s class.',
+                __METHOD__,
+                get_called_class()
+        ));
+    }
 
+    /**
+     * @param string $type
+     * @param int $id
+     * @param string $key
+     * @param bool $single
+     * @param mixed $value
+     * @param bool $unique
+     *
+     * @return mixed
+     */
+    public function meta($type, $id, $key, $single = true, $value = null, $unique = false)
+    {
+        return (null === $value) ? get_metadata($type, $id, $key, $single) : add_metadata($type, $id, $key, $value, $unique);
     }
 
     /**
