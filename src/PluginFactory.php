@@ -18,7 +18,6 @@ abstract class PluginFactory implements PluginInterface
 
     /**
      * PluginFactory constructor.
-     *
      * @param array $options
      */
     public function __construct(array $options = [])
@@ -29,6 +28,8 @@ abstract class PluginFactory implements PluginInterface
     }
 
     /**
+     * Manage the configuration with Illuminate/Config
+     *
      * @param null|string $item
      * @param null|mixed $default
      *
@@ -44,7 +45,7 @@ abstract class PluginFactory implements PluginInterface
      * @param array $data
      * @param bool $return
      *
-     * @return bool|string
+     * @return bool|null|string
      */
     public function render($template, array $data = [], $return = false)
     {
@@ -64,11 +65,32 @@ abstract class PluginFactory implements PluginInterface
             return $content;
         } else {
             echo $content;
+
+            return null;
         }
     }
 
     /**
+     * Get or save metadata
+     *
+     * @param string $type
+     * @param int $id
+     * @param string $key
+     * @param bool $single
+     * @param null|mixed $value
+     * @param bool $unique
+     *
+     * @return mixed
+     */
+    public function meta($type, $id, $key, $single = true, $value = null, $unique = false)
+    {
+        return (null === $value) ? get_metadata($type, $id, $key, $single) : add_metadata($type, $id, $key, $value, $unique);
+    }
+
+    /**
      * Register WordPress hooks here
+     *
+     * @throws \Exception
      */
     public function registerHooks()
     {
@@ -77,21 +99,6 @@ abstract class PluginFactory implements PluginInterface
                 __METHOD__,
                 get_called_class()
         ));
-    }
-
-    /**
-     * @param string $type
-     * @param int $id
-     * @param string $key
-     * @param bool $single
-     * @param mixed $value
-     * @param bool $unique
-     *
-     * @return mixed
-     */
-    public function meta($type, $id, $key, $single = true, $value = null, $unique = false)
-    {
-        return (null === $value) ? get_metadata($type, $id, $key, $single) : add_metadata($type, $id, $key, $value, $unique);
     }
 
     /**
